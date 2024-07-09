@@ -4,7 +4,9 @@ fn main() {
     for kernel in std::fs::read_dir("kernels").expect("Error finding kernels folder") {
         let path = kernel.expect("Invalid path in kernels folder").path();
         SpirvBuilder::new(path, "spirv-unknown-vulkan1.1")
+            .capability(spirv_builder::Capability::Int8)
             .build()
             .expect("Kernel failed to compile");
     }
 }
+

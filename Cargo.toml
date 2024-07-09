@@ -1,5 +1,5 @@
 [package]
-name = "rust-gpu"
+name = "wgpu-dsp"
 version = "0.1.0"
 edition = "2021"
 description = "Minimal rust-gpu compute shader example running on WGPU backend with Vulkan support"
@@ -7,7 +7,7 @@ keywords = ["rust-gpu", "wgpu", "compute-shader", "vulkan"]
 
 [dependencies]
 futures = { version = "0.3", default-features = false, features = ["std", "executor"] }
-wgpu = { version = "0.17.0", features = ["spirv", "vulkan-portability"] }
+wgpu = { version = "0.18.0", features = ["spirv", "vulkan-portability"] }
 
 [build-dependencies]
-spirv-builder = { version = "0.9.0" }
+spirv-builder = { git = "https://github.com/EmbarkStudios/rust-gpu", rev = "54f6978" }
