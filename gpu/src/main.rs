@@ -3,7 +3,7 @@ use encase::ShaderType;
 use std::num::NonZeroU64;
 
 const MAX_SEEDS: u64 = 100_000_000;
-const RETURN_SIZE: u64 = 2; // in bytes
+const RETURN_SIZE: u64 = 1; // in bytes
 const MAX_BIND_SIZE: u64 = 127 * 1024 * 1024; // 127 MB
 const SHADER_THREADS: u64 = 32;
 
@@ -206,8 +206,7 @@ fn initialize() -> Result<(wgpu::Device, wgpu::Queue), anyhow::Error> {
     Ok(pollster::block_on(adapter.request_device(
         &wgpu::DeviceDescriptor {
             label: None,
-            required_features: wgpu::Features::SPIRV_SHADER_PASSTHROUGH
-                | wgpu::Features::SHADER_I16,
+            required_features: wgpu::Features::SPIRV_SHADER_PASSTHROUGH,
             required_limits: wgpu::Limits::downlevel_defaults(),
             memory_hints: wgpu::MemoryHints::MemoryUsage,
         },
