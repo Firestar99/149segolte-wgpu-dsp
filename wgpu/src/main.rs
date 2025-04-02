@@ -1,5 +1,4 @@
 use anyhow::{Context, Result, anyhow};
-use encase::ShaderType;
 use std::num::NonZeroU64;
 
 const MAX_SEEDS: u64 = 100_000_000;
@@ -7,7 +6,7 @@ const RETURN_SIZE: u64 = 1; // in bytes
 const MAX_BIND_SIZE: u64 = 127 * 1024 * 1024; // 127 MB
 const SHADER_THREADS: u64 = 32;
 
-#[derive(Debug, ShaderType)]
+#[allow(dead_code)]
 struct Uniforms {
     max_seeds: u32,
     chunk: u32,
@@ -19,12 +18,6 @@ impl Uniforms {
             max_seeds: MAX_SEEDS as u32,
             chunk,
         }
-    }
-
-    fn as_bytes(&self) -> encase::internal::Result<Vec<u8>> {
-        let mut buffer = encase::UniformBuffer::new(Vec::new());
-        buffer.write(self)?;
-        Ok(buffer.into_inner())
     }
 }
 
@@ -120,8 +113,12 @@ fn main() -> Result<()> {
         device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
 
     for chunk in 0..(MAX_SEEDS * RETURN_SIZE).div_ceil(MAX_BIND_SIZE) {
-        let uniforms = Uniforms::new(chunk as u32);
-        queue.write_buffer(&uniform_buffer, 0, &uniforms.as_bytes()?);
+        let uniforms = unsafe {
+            let data = Uniforms::new(chunk as u32);
+            let data_ptr = &data as *const Uniforms as *const u8;
+            std::slice::from_raw_parts(data_ptr, std::mem::size_of::<Uniforms>())
+        };
+        queue.write_buffer(&uniform_buffer, 0, &uniforms);
 
         let mut compute_pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
             label: None,
