@@ -33,9 +33,8 @@ fn main() -> Result<()> {
 
     let (device, queue) = initialize()?;
 
-    let module = unsafe {
-        device.create_shader_module_spirv(&wgpu::include_spirv_raw!(env!("compute.spv")))
-    };
+    let module =
+        unsafe { device.create_shader_module_spirv(&wgpu::include_spirv_raw!(env!("shader.spv"))) };
 
     let uniform_buffer = device.create_buffer(&wgpu::BufferDescriptor {
         label: None,
