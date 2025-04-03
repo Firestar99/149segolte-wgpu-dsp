@@ -22,7 +22,7 @@ pub fn compute_shader(
     #[spirv(workgroup_id)] workgroup_id: UVec3,
     #[spirv(local_invocation_index)] local_invocation_index: u32,
     #[spirv(uniform, descriptor_set = 0, binding = 0)] uniforms: &Uniforms,
-    #[spirv(storage_buffer, descriptor_set = 0, binding = 1)] output: &mut [u8],
+    #[spirv(storage_buffer, descriptor_set = 0, binding = 1)] output: &mut [u16],
 ) {
     let work_group_index = workgroup_id.x * num_workgroups.y * num_workgroups.z
         + workgroup_id.z * num_workgroups.y
